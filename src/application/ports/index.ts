@@ -8,6 +8,15 @@ export type {
   StreamChatParams,
 } from "@/application/ports/chat-completion.port";
 
+export type {
+  RetrievalPort,
+  RetrievalRequest,
+  RetrievalResult,
+  RetrievalSufficiency,
+  RetrievedKnowledgeItem,
+  RetrievedResource,
+} from "@/application/ports/retrieval.port";
+
 /**
  * Port for retrieving persona definitions.
  * Infrastructure layer will implement; application layer depends on this interface.

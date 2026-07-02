@@ -8,6 +8,7 @@ import * as chunk from "./chunk/index.js";
 import * as collect from "./collect/index.js";
 import * as embed from "./embed/index.js";
 import * as processStage from "./process/index.js";
+import * as resources from "./resources/index.js";
 import * as summarize from "./summarize/index.js";
 import { getPersonaConfig } from "./config/personas.js";
 import {
@@ -24,12 +25,14 @@ const BUILD_STAGE_ORDER = [
   "summarize",
   "chunk",
   "embed",
+  "resources",
 ] as const;
 
 interface ParsedCliArgs {
   readonly command: PipelineCommand;
   readonly personaId: string;
   readonly force: boolean;
+  readonly buildOnly: boolean;
 }
 
 /**
@@ -45,7 +48,8 @@ Commands:
   ${commands}
 
 Options:
-  --force    Reprocess/re-embed existing outputs instead of skipping
+  --force        Reprocess/re-embed existing outputs instead of skipping
+  --build-only   (resources) Write the catalog to storage without embedding
 
 Personas:
   ${personas}
@@ -61,6 +65,8 @@ Examples:
   pnpm persona chunk piyush --force
   pnpm persona embed piyush
   pnpm persona embed piyush --force
+  pnpm persona resources piyush
+  pnpm persona resources piyush --force
   pnpm persona build piyush`);
 }
 
@@ -72,7 +78,10 @@ Examples:
 function parseCliArgs(argv: readonly string[]): ParsedCliArgs {
   const filtered = argv.filter((arg) => arg !== "--");
   const force = filtered.includes("--force");
-  const positional = filtered.filter((arg) => arg !== "--force");
+  const buildOnly = filtered.includes("--build-only");
+  const positional = filtered.filter(
+    (arg) => arg !== "--force" && arg !== "--build-only",
+  );
   const [commandArg, personaId] = positional;
 
   if (!commandArg) {
@@ -93,6 +102,7 @@ function parseCliArgs(argv: readonly string[]): ParsedCliArgs {
     command: commandArg as PipelineCommand,
     personaId,
     force,
+    buildOnly,
   };
 }
 
@@ -117,6 +127,7 @@ async function runBuild(personaId: string, force: boolean): Promise<void> {
   await summarize.run(personaId, { force });
   await chunk.run(personaId, { force });
   await embed.run(personaId, { force });
+  await resources.run(personaId, { force });
 
   logger.info("Full pipeline build complete", {
     personaId: config.id,
@@ -134,7 +145,7 @@ async function main(): Promise<void> {
     process.exit(argv.length === 0 ? 1 : 0);
   }
 
-  const { command, personaId, force } = parseCliArgs(argv);
+  const { command, personaId, force, buildOnly } = parseCliArgs(argv);
 
   await ensureStorageRoot();
 
@@ -165,6 +176,11 @@ async function main(): Promise<void> {
 
   if (command === "embed") {
     await embed.run(personaId, { force });
+    return;
+  }
+
+  if (command === "resources") {
+    await resources.run(personaId, { force, buildOnly });
     return;
   }
 

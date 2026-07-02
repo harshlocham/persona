@@ -5,6 +5,12 @@ const serverEnvSchema = z.object({
     .string()
     .min(1, "GOOGLE_GENERATIVE_AI_API_KEY is required"),
   GEMINI_MODEL: z.string().default("gemini-2.5-flash"),
+  EMBEDDING_MODEL: z.string().default("gemini-embedding-001"),
+  EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().default(768),
+  QDRANT_URL: z.string().default("http://localhost:6333"),
+  QDRANT_API_KEY: z.string().optional(),
+  QDRANT_COLLECTION: z.string().default("persona_knowledge"),
+  RESOURCES_COLLECTION: z.string().default("persona_resources"),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),

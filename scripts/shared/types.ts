@@ -25,6 +25,24 @@ export const TOPICS = [
 export type Topic = (typeof TOPICS)[number];
 
 /**
+ * Kinds of persona-owned learning resources.
+ */
+export const RESOURCE_TYPES = ["video", "playlist", "course", "blog"] as const;
+
+export type ResourceType = (typeof RESOURCE_TYPES)[number];
+
+/**
+ * Difficulty levels assigned to persona-owned resources.
+ */
+export const RESOURCE_DIFFICULTIES = [
+  "beginner",
+  "intermediate",
+  "advanced",
+] as const;
+
+export type ResourceDifficulty = (typeof RESOURCE_DIFFICULTIES)[number];
+
+/**
  * Supported persona identifiers for the knowledge pipeline.
  */
 export const PIPELINE_PERSONA_IDS = ["hitesh", "piyush"] as const;
@@ -106,6 +124,27 @@ export interface ChunkDocument {
 }
 
 /**
+ * A persona-owned learning resource (video, playlist, course, or blog).
+ * First-class record used for grounded resource recommendations at runtime.
+ */
+export interface ResourceRecord {
+  readonly id: string;
+  readonly personaId: PipelinePersonaId;
+  readonly title: string;
+  readonly type: ResourceType;
+  readonly url: string;
+  readonly topics: readonly string[];
+  readonly difficulty: ResourceDifficulty;
+  readonly durationMinutes?: number;
+  readonly publishedAt?: string;
+  readonly summary: string;
+  readonly recommendedPrerequisites: readonly string[];
+  readonly recommendedNext: readonly string[];
+  readonly sourceType: SourceType;
+  readonly createdAt: string;
+}
+
+/**
  * A vector-ready embedding record linked to knowledge content.
  */
 export interface EmbeddingDocument {
@@ -142,6 +181,7 @@ export const PIPELINE_COMMANDS = [
   "summarize",
   "chunk",
   "embed",
+  "resources",
   "build",
 ] as const;
 

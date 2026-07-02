@@ -52,6 +52,7 @@ const embeddingEnvSchema = z.object({
   QDRANT_URL: z.string().default("http://localhost:6333"),
   QDRANT_API_KEY: z.string().optional(),
   QDRANT_COLLECTION: z.string().default("persona_knowledge"),
+  RESOURCES_COLLECTION: z.string().default("persona_resources"),
 });
 
 export type EmbeddingEnv = z.infer<typeof embeddingEnvSchema>;

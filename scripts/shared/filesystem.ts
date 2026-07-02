@@ -12,6 +12,7 @@ const STORAGE_STAGES = [
   "knowledge",
   "chunks",
   "embeddings",
+  "resources",
 ] as const;
 
 export type StorageStage = (typeof STORAGE_STAGES)[number];
@@ -76,6 +77,13 @@ export function getChunksDir(personaId: PipelinePersonaId): string {
  */
 export function getEmbeddingsDir(personaId: PipelinePersonaId): string {
   return getPersonaStageDir("embeddings", personaId);
+}
+
+/**
+ * Returns the resources storage directory for a persona.
+ */
+export function getResourcesDir(personaId: PipelinePersonaId): string {
+  return getPersonaStageDir("resources", personaId);
 }
 
 /**

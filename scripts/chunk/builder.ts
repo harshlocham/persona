@@ -10,12 +10,52 @@ import type {
 import { splitByHeadings, splitWithOverlap } from "./splitter.js";
 
 /**
+ * Section headings that are keyword/token dumps rather than prose. They embed
+ * to near-meaningless vectors and pollute top-k retrieval, so they are never
+ * emitted as chunks.
+ */
+const NON_EMBEDDABLE_SECTIONS = new Set(["Important Vocabulary"]);
+
+/** Minimum meaningful words for a chunk to be worth embedding. */
+const MIN_CHUNK_WORDS = 12;
+
+/**
  * Computes a stable SHA-256 hash for chunk text.
  *
  * @param text - Chunk text content
  */
 export function hashChunkText(text: string): string {
   return createHash("sha256").update(text, "utf-8").digest("hex");
+}
+
+/**
+ * Detects low-value chunks unfit for retrieval: fragments below the word floor
+ * and bullet dumps (mostly short list items, e.g. `- python\n- python3`).
+ *
+ * @param text - Trimmed chunk text
+ * @param wordCount - Whitespace-delimited word count
+ */
+export function isLowValueChunk(text: string, wordCount: number): boolean {
+  if (wordCount < MIN_CHUNK_WORDS) {
+    return true;
+  }
+
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  if (lines.length >= 3) {
+    const shortBullets = lines.filter(
+      (line) => /^[-*]\s/.test(line) && line.split(/\s+/).length <= 3,
+    ).length;
+
+    if (shortBullets / lines.length >= 0.6) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -96,12 +136,22 @@ export function buildChunkDocuments(
   let chunkIndex = 0;
 
   for (const section of sections) {
+    if (NON_EMBEDDABLE_SECTIONS.has(section.section)) {
+      continue;
+    }
+
     const windows = splitWithOverlap(section.text);
 
     for (const window of windows) {
       const text = window.trim();
 
       if (text.length === 0) {
+        continue;
+      }
+
+      const wordCount = text.split(/\s+/).length;
+
+      if (isLowValueChunk(text, wordCount)) {
         continue;
       }
 
@@ -126,7 +176,7 @@ export function buildChunkDocuments(
               ? (knowledge.metadata as Record<string, unknown>).language
               : "unknown",
           headingDepth: section.depth,
-          wordCount: text.split(/\s+/).length,
+          wordCount,
         },
       });
 

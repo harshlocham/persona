@@ -37,11 +37,9 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   try {
-    const { textStream } = sendChatMessageUseCase.execute({
+    const { textStream } = await sendChatMessageUseCase.execute({
       personaId: toPersonaId(parsed.data.personaId),
       messages: parsed.data.messages,
-      retrievedContext: parsed.data.retrievedContext,
-      conversationSummary: parsed.data.conversationSummary,
     });
 
     return createTextStreamResponse({ stream: textStream });

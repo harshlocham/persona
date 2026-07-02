@@ -135,7 +135,16 @@ export function extractKeywords(
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, " ")
     .split(/\s+/)
-    .filter((token) => token.length >= 4 && !STOP_WORDS.has(token));
+    .filter(
+      (token) =>
+        token.length >= 4 &&
+        !STOP_WORDS.has(token) &&
+        // Require an alphabetic character: drops bare numbers and numeric
+        // fragments (port numbers, prices) that dominated ASR-heavy content.
+        /[a-z]/.test(token) &&
+        // Drop tokens that are mostly digits (e.g. "anaconda2" stays, "12abc" goes).
+        (token.match(/\d/g)?.length ?? 0) <= token.length / 2,
+    );
 
   const frequency = new Map<string, number>();
 

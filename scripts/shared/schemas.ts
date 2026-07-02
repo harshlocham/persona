@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import {
   PIPELINE_PERSONA_IDS,
+  RESOURCE_DIFFICULTIES,
+  RESOURCE_TYPES,
   SOURCE_TYPES,
   TOPICS,
 } from "./types.js";
@@ -110,6 +112,38 @@ export const embeddingDocumentSchema = z.object({
   createdAt: z.string().datetime(),
   metadata: z.record(z.unknown()).optional(),
 });
+
+/**
+ * Zod schema for {@link ResourceType}.
+ */
+export const resourceTypeSchema = z.enum(RESOURCE_TYPES);
+
+/**
+ * Zod schema for {@link ResourceDifficulty}.
+ */
+export const resourceDifficultySchema = z.enum(RESOURCE_DIFFICULTIES);
+
+/**
+ * Zod schema for {@link ResourceRecord}.
+ */
+export const resourceRecordSchema = z.object({
+  id: z.string().min(1),
+  personaId: pipelinePersonaIdSchema,
+  title: z.string().min(1),
+  type: resourceTypeSchema,
+  url: z.string().url(),
+  topics: z.array(z.string()),
+  difficulty: resourceDifficultySchema,
+  durationMinutes: z.number().nonnegative().optional(),
+  publishedAt: z.string().optional(),
+  summary: z.string(),
+  recommendedPrerequisites: z.array(z.string()).default([]),
+  recommendedNext: z.array(z.string()).default([]),
+  sourceType: sourceTypeSchema,
+  createdAt: z.string().datetime(),
+});
+
+export type ResourceRecordInput = z.infer<typeof resourceRecordSchema>;
 
 export type RawDocumentInput = z.infer<typeof rawDocumentSchema>;
 export type ProcessedDocumentInput = z.infer<typeof processedDocumentSchema>;
