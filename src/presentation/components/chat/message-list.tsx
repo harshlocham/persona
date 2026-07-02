@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageBubble } from "@/presentation/components/chat/message-bubble";
 import { SuggestedQuestions } from "@/presentation/components/chat/suggested-questions";
+import { ThinkingIndicator } from "@/presentation/components/chat/thinking-indicator";
 import type { PersonaUiOption } from "@/domain/models/persona";
 
 interface MessageListProps {
@@ -25,6 +26,9 @@ export function MessageList({
   const bottomRef = useRef<HTMLDivElement>(null);
   const isStreaming = status === "submitted" || status === "streaming";
   const isBusy = isStreaming;
+  const showPendingThinking =
+    status === "submitted" &&
+    messages[messages.length - 1]?.role === "user";
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -80,6 +84,32 @@ export function MessageList({
             />
           );
         })}
+
+        {showPendingThinking ? (
+          <div className="flex w-full justify-start gap-3">
+            <Avatar className="mt-1 h-8 w-8">
+              <AvatarFallback
+                className="text-xs font-medium"
+                style={{
+                  backgroundColor: "var(--persona-muted)",
+                  color: "var(--persona-primary)",
+                }}
+              >
+                {persona.metadata.avatar.initials}
+              </AvatarFallback>
+            </Avatar>
+            <div
+              className="max-w-[85%] rounded-2xl border px-4 py-3 shadow-sm sm:max-w-[75%]"
+              style={{
+                backgroundColor: "var(--persona-bubble)",
+                color: "var(--persona-bubble-foreground)",
+              }}
+            >
+              <ThinkingIndicator />
+            </div>
+          </div>
+        ) : null}
+
         <div ref={bottomRef} />
       </div>
     </ScrollArea>

@@ -1,11 +1,11 @@
 "use client";
 
 import type { UIMessage } from "ai";
-import { Loader2 } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { MarkdownContent } from "@/presentation/components/chat/markdown-content";
+import { ThinkingIndicator } from "@/presentation/components/chat/thinking-indicator";
 import { getMessageText } from "@/presentation/lib/chat-messages";
 import type { PersonaUiOption } from "@/domain/models/persona";
 
@@ -62,10 +62,7 @@ export function MessageBubble({
         {isUser ? (
           <p className="whitespace-pre-wrap text-sm leading-relaxed">{text}</p>
         ) : showLoading ? (
-          <div className="flex items-center gap-2 text-sm opacity-70">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Thinking...</span>
-          </div>
+          <ThinkingIndicator />
         ) : (
           <MarkdownContent content={text} />
         )}

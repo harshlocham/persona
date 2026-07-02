@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { BRAND_NAME } from "@/shared/constants/branding";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Persona",
-  description: "AI persona chat application",
+  title: BRAND_NAME,
+  description: "AI persona chat application"
 };
 
 export default function RootLayout({
