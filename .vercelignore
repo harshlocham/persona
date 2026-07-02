@@ -1,0 +1,9 @@
+# Local ETL data corpus — the deployed app reads from hosted Qdrant, not disk.
+storage
+
+# Build artifacts and dependencies (Vercel rebuilds these).
+.next
+node_modules
+
+# Local-only tooling and docs not needed by the runtime/build.
+docs
