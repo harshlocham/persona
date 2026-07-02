@@ -66,6 +66,36 @@ export const knowledgeDocumentSchema = z.object({
 });
 
 /**
+ * Zod schema for chunk source attribution.
+ */
+export const chunkSourceAttributionSchema = z.object({
+  sourceType: z.string(),
+  sourceUrl: z.string(),
+  rawDocumentId: z.string(),
+  processedDocumentId: z.string(),
+  knowledgeDocumentId: z.string(),
+  title: z.string(),
+});
+
+/**
+ * Zod schema for {@link ChunkDocument}.
+ */
+export const chunkDocumentSchema = z.object({
+  id: z.string().min(1),
+  personaId: pipelinePersonaIdSchema,
+  knowledgeDocumentId: z.string().min(1),
+  topic: topicSchema,
+  section: z.string().min(1),
+  chunkIndex: z.number().int().nonnegative(),
+  text: z.string().min(1),
+  hash: z.string().min(1),
+  keywords: z.array(z.string()),
+  source: chunkSourceAttributionSchema,
+  createdAt: z.string().datetime(),
+  metadata: z.record(z.unknown()).optional(),
+});
+
+/**
  * Zod schema for {@link EmbeddingDocument}.
  */
 export const embeddingDocumentSchema = z.object({
@@ -84,6 +114,7 @@ export const embeddingDocumentSchema = z.object({
 export type RawDocumentInput = z.infer<typeof rawDocumentSchema>;
 export type ProcessedDocumentInput = z.infer<typeof processedDocumentSchema>;
 export type KnowledgeDocumentInput = z.infer<typeof knowledgeDocumentSchema>;
+export type ChunkDocumentInput = z.infer<typeof chunkDocumentSchema>;
 export type EmbeddingDocumentInput = z.infer<typeof embeddingDocumentSchema>;
 
 /**

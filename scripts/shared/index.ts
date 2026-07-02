@@ -4,6 +4,7 @@ export {
   ensurePersonaStorageDirs,
   ensureStorageRoot,
   fileExists,
+  getChunksDir,
   getEmbeddingsDir,
   getKnowledgeDir,
   getProcessedDir,
@@ -18,6 +19,8 @@ export {
 } from "./filesystem.js";
 export { createLogger, logger, type Logger, type LogLevel } from "./logger.js";
 export {
+  chunkDocumentSchema,
+  chunkSourceAttributionSchema,
   embeddingDocumentSchema,
   knowledgeDocumentSchema,
   pipelinePersonaIdSchema,
@@ -27,6 +30,7 @@ export {
   topicSchema,
   youtubeCollectionIndexSchema,
   youtubeVideoMetadataSchema,
+  type ChunkDocumentInput,
   type EmbeddingDocumentInput,
   type KnowledgeDocumentInput,
   type ProcessedDocumentInput,
@@ -34,7 +38,13 @@ export {
   type YouTubeCollectionIndex,
   type YouTubeVideoMetadata,
 } from "./schemas.js";
-export { getPipelineEnv, getYoutubeApiKey, type PipelineEnv } from "./env.js";
+export {
+  getEmbeddingEnv,
+  getPipelineEnv,
+  getYoutubeApiKey,
+  type EmbeddingEnv,
+  type PipelineEnv,
+} from "./env.js";
 export { loadEnvFiles } from "./load-env.js";
 export { createRateLimiter, sleep, type RateLimiter, type RateLimiterOptions } from "./rate-limit.js";
 export {
@@ -42,6 +52,8 @@ export {
   PIPELINE_PERSONA_IDS,
   SOURCE_TYPES,
   TOPICS,
+  type ChunkDocument,
+  type ChunkSourceAttribution,
   type EmbeddingDocument,
   type KnowledgeDocument,
   type PipelineCommand,

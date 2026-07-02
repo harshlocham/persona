@@ -76,6 +76,36 @@ export interface KnowledgeDocument {
 }
 
 /**
+ * Source attribution carried through the pipeline into chunks.
+ */
+export interface ChunkSourceAttribution {
+  readonly sourceType: string;
+  readonly sourceUrl: string;
+  readonly rawDocumentId: string;
+  readonly processedDocumentId: string;
+  readonly knowledgeDocumentId: string;
+  readonly title: string;
+}
+
+/**
+ * A retrieval-ready text chunk derived from a knowledge document.
+ */
+export interface ChunkDocument {
+  readonly id: string;
+  readonly personaId: PipelinePersonaId;
+  readonly knowledgeDocumentId: string;
+  readonly topic: Topic;
+  readonly section: string;
+  readonly chunkIndex: number;
+  readonly text: string;
+  readonly hash: string;
+  readonly keywords: readonly string[];
+  readonly source: ChunkSourceAttribution;
+  readonly createdAt: string;
+  readonly metadata?: Readonly<Record<string, unknown>>;
+}
+
+/**
  * A vector-ready embedding record linked to knowledge content.
  */
 export interface EmbeddingDocument {
@@ -110,6 +140,7 @@ export const PIPELINE_COMMANDS = [
   "collect",
   "process",
   "summarize",
+  "chunk",
   "embed",
   "build",
 ] as const;

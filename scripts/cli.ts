@@ -4,6 +4,7 @@ import { loadEnvFiles } from "./shared/load-env.js";
 
 loadEnvFiles();
 
+import * as chunk from "./chunk/index.js";
 import * as collect from "./collect/index.js";
 import * as embed from "./embed/index.js";
 import * as processStage from "./process/index.js";
@@ -17,11 +18,12 @@ import {
   type PipelineCommand,
 } from "./shared/index.js";
 
-const STAGES_IN_ORDER = [
-  { name: "collect", run: collect.run },
-  { name: "process", run: processStage.run },
-  { name: "summarize", run: summarize.run },
-  { name: "embed", run: embed.run },
+const BUILD_STAGE_ORDER = [
+  "collect",
+  "process",
+  "summarize",
+  "chunk",
+  "embed",
 ] as const;
 
 interface ParsedCliArgs {
@@ -43,7 +45,7 @@ Commands:
   ${commands}
 
 Options:
-  --force    Overwrite existing collected raw documents
+  --force    Reprocess/re-embed existing outputs instead of skipping
 
 Personas:
   ${personas}
@@ -51,6 +53,14 @@ Personas:
 Examples:
   pnpm persona collect hitesh
   pnpm persona collect hitesh --force
+  pnpm persona process piyush
+  pnpm persona process piyush --force
+  pnpm persona summarize piyush
+  pnpm persona summarize piyush --force
+  pnpm persona chunk piyush
+  pnpm persona chunk piyush --force
+  pnpm persona embed piyush
+  pnpm persona embed piyush --force
   pnpm persona build piyush`);
 }
 
@@ -99,17 +109,14 @@ async function runBuild(personaId: string, force: boolean): Promise<void> {
     personaId: config.id,
     displayName: config.displayName,
     force,
-    stages: STAGES_IN_ORDER.map((stage) => stage.name),
+    stages: BUILD_STAGE_ORDER,
   });
 
-  for (const stage of STAGES_IN_ORDER) {
-    if (stage.name === "collect") {
-      await collect.run(personaId, { force });
-      continue;
-    }
-
-    await stage.run(personaId);
-  }
+  await collect.run(personaId, { force });
+  await processStage.run(personaId, { force });
+  await summarize.run(personaId, { force });
+  await chunk.run(personaId, { force });
+  await embed.run(personaId, { force });
 
   logger.info("Full pipeline build complete", {
     personaId: config.id,
@@ -141,20 +148,27 @@ async function main(): Promise<void> {
     return;
   }
 
-  if (force) {
-    logger.warn("--force is only applied to collect/build commands");
+  if (command === "process") {
+    await processStage.run(personaId, { force });
+    return;
   }
 
-  const runners: Record<
-    Exclude<PipelineCommand, "build" | "collect">,
-    (personaId: string) => Promise<void>
-  > = {
-    process: processStage.run,
-    summarize: summarize.run,
-    embed: embed.run,
-  };
+  if (command === "summarize") {
+    await summarize.run(personaId, { force });
+    return;
+  }
 
-  await runners[command](personaId);
+  if (command === "chunk") {
+    await chunk.run(personaId, { force });
+    return;
+  }
+
+  if (command === "embed") {
+    await embed.run(personaId, { force });
+    return;
+  }
+
+  throw new Error(`Unhandled command "${command}".`);
 }
 
 main().catch((error: unknown) => {

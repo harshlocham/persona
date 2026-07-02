@@ -10,6 +10,7 @@ const STORAGE_STAGES = [
   "raw",
   "processed",
   "knowledge",
+  "chunks",
   "embeddings",
 ] as const;
 
@@ -61,6 +62,13 @@ export function getProcessedDir(personaId: PipelinePersonaId): string {
  */
 export function getKnowledgeDir(personaId: PipelinePersonaId): string {
   return getPersonaStageDir("knowledge", personaId);
+}
+
+/**
+ * Returns the chunks storage directory for a persona.
+ */
+export function getChunksDir(personaId: PipelinePersonaId): string {
+  return getPersonaStageDir("chunks", personaId);
 }
 
 /**
