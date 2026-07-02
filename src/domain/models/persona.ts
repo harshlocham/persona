@@ -55,6 +55,12 @@ export interface PersonaPromptSection {
  */
 export interface PersonaPromptProfile {
   readonly roleStatement: string;
+  /**
+   * Explicit language/script directive for responses (e.g. Hinglish in Roman
+   * script). Enforced in the behavioral contract so the model does not mirror
+   * the script of retrieved reference material.
+   */
+  readonly languageStyle: string;
   readonly sections: readonly PersonaPromptSection[];
 }
 

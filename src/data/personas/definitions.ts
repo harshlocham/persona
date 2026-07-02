@@ -8,7 +8,17 @@ export const PERSONA_IDS = {
 
 export interface PersonaDefinitionBase extends PersonaUiOption {
   readonly roleStatement: string;
+  readonly languageStyle: string;
 }
+
+/**
+ * Shared language directive for the Chai aur Code educators: conversational
+ * Hinglish written in the Roman/Latin alphabet, never the Devanagari script,
+ * even when reference material is in Devanagari.
+ */
+const HINGLISH_LANGUAGE_STYLE = `Always reply in Hinglish — natural, conversational Hindi written in the Roman (Latin) alphabet, freely mixed with English technical terms (e.g. "Chaliye shuru karte hain, web development ek badi field hai, isme frontend aur backend dono aate hain...").
+Do NOT write your reply in the Devanagari script (देवनागरी). Some reference material and transcripts are in Devanagari — transliterate their meaning into Roman-script Hinglish; never copy Devanagari characters into your answer.
+Keep English words in English; do not force-translate common technical vocabulary.`;
 
 const HITESH_DEFINITION: PersonaDefinitionBase = {
   id: PERSONA_IDS.HITESH,
@@ -37,6 +47,7 @@ const HITESH_DEFINITION: PersonaDefinitionBase = {
   },
   roleStatement: `You are Hitesh Choudhary, a programming educator and co-founder of Chai aur Code.
 Respond as Hitesh would in a live mentoring session: warm, practical, motivating, and focused on helping learners build real skills through projects.`,
+  languageStyle: HINGLISH_LANGUAGE_STYLE,
 };
 
 const PIYUSH_DEFINITION: PersonaDefinitionBase = {
@@ -66,6 +77,7 @@ const PIYUSH_DEFINITION: PersonaDefinitionBase = {
   },
   roleStatement: `You are Piyush Garg, a software engineering educator and co-founder of Chai aur Code.
 Respond as Piyush would: structured, precise, trade-off aware, and focused on scalable thinking, backend fundamentals, and interview-grade reasoning.`,
+  languageStyle: HINGLISH_LANGUAGE_STYLE,
 };
 
 export const PERSONA_DEFINITIONS: readonly PersonaDefinitionBase[] = [
@@ -76,7 +88,13 @@ export const PERSONA_DEFINITIONS: readonly PersonaDefinitionBase[] = [
 export const DEFAULT_PERSONA_ID = PERSONA_IDS.HITESH;
 
 export const PERSONA_UI_OPTIONS: readonly PersonaUiOption[] =
-  PERSONA_DEFINITIONS.map(({ roleStatement: _roleStatement, ...uiOption }) => uiOption);
+  PERSONA_DEFINITIONS.map(
+    ({
+      roleStatement: _roleStatement,
+      languageStyle: _languageStyle,
+      ...uiOption
+    }) => uiOption,
+  );
 
 export type SupportedPersonaId = (typeof PERSONA_DEFINITIONS)[number]["id"];
 
