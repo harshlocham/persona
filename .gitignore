@@ -48,6 +48,8 @@ storage/knowledge/**/*
 !storage/knowledge/.gitkeep
 storage/embeddings/**/*
 !storage/embeddings/.gitkeep
+storage/chunks/**
+storage/resources/**
 
 *.tsbuildinfo
 next-env.d.ts
