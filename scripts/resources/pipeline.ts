@@ -15,6 +15,7 @@ import { createEmbedder } from "../embed/embedder.js";
 import {
   createQdrantContext,
   ensureCollection,
+  ensurePayloadIndexes,
   getExistingPointIds,
   toPointId,
   upsertPoints,
@@ -199,6 +200,7 @@ export async function runResourcesPipeline(
   const context = { ...createQdrantContext(), collection: env.RESOURCES_COLLECTION };
 
   await ensureCollection(context, embedder.dimensions);
+  await ensurePayloadIndexes(context, ["persona", "type"]);
 
   const pending = force ? records : await selectPending(context, records);
 

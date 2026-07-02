@@ -10,6 +10,57 @@ export function sleep(ms: number): Promise<void> {
 }
 
 /**
+ * Options for {@link withRetry}.
+ */
+export interface RetryOptions {
+  /** Number of retries after the initial attempt. */
+  readonly retries?: number;
+  /** Initial backoff delay in milliseconds. */
+  readonly baseDelayMs?: number;
+  /** Upper bound on any single backoff delay. */
+  readonly maxDelayMs?: number;
+  /** Invoked before each retry sleep, for logging/telemetry. */
+  readonly onRetry?: (error: unknown, attempt: number, delayMs: number) => void;
+}
+
+/**
+ * Runs an async operation with exponential backoff and jitter. Retries on any
+ * thrown error up to {@link RetryOptions.retries} times, then rethrows. Intended
+ * to absorb transient rate-limit (429) and network errors during paid embedding
+ * and Qdrant upsert calls so a whole batch is not lost to a momentary blip.
+ *
+ * @param operation - The async operation to attempt
+ * @param options - Retry configuration
+ */
+export async function withRetry<T>(
+  operation: () => Promise<T>,
+  options: RetryOptions = {},
+): Promise<T> {
+  const retries = options.retries ?? 4;
+  const baseDelayMs = options.baseDelayMs ?? 1_000;
+  const maxDelayMs = options.maxDelayMs ?? 30_000;
+
+  let attempt = 0;
+
+  for (;;) {
+    try {
+      return await operation();
+    } catch (error) {
+      if (attempt >= retries) {
+        throw error;
+      }
+
+      const backoff = Math.min(maxDelayMs, baseDelayMs * 2 ** attempt);
+      const delayMs = Math.round(backoff + Math.random() * backoff * 0.25);
+
+      options.onRetry?.(error, attempt + 1, delayMs);
+      await sleep(delayMs);
+      attempt += 1;
+    }
+  }
+}
+
+/**
  * Options for {@link createRateLimiter}.
  */
 export interface RateLimiterOptions {

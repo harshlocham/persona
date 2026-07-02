@@ -15,6 +15,7 @@ import { createEmbedder } from "./embedder.js";
 import {
   createQdrantContext,
   ensureCollection,
+  ensurePayloadIndexes,
   getExistingPointIds,
   toPointId,
   upsertPoints,
@@ -191,6 +192,7 @@ export async function runEmbedPipeline(
   const context = createQdrantContext();
 
   await ensureCollection(context, embedder.dimensions);
+  await ensurePayloadIndexes(context, ["persona"]);
 
   const pending = await selectPendingChunks(context, chunks, force);
   const skipped = chunks.length - pending.length;

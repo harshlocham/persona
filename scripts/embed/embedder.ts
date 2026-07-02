@@ -1,7 +1,7 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { embedMany } from "ai";
 
-import { getEmbeddingEnv, logger, sleep } from "../shared/index.js";
+import { getEmbeddingEnv, logger, sleep, withRetry } from "../shared/index.js";
 
 /**
  * A configured, reusable text embedder backed by a single model.
@@ -58,16 +58,31 @@ export function createEmbedder(): Embedder {
 
       nextAvailableAt = Date.now() + texts.length * perItemMs;
 
-      const { embeddings } = await embedMany({
-        model,
-        values: [...texts],
-        providerOptions: {
-          google: {
-            taskType: "RETRIEVAL_DOCUMENT",
-            outputDimensionality: env.EMBEDDING_DIMENSIONS,
+      const { embeddings } = await withRetry(
+        () =>
+          embedMany({
+            model,
+            values: [...texts],
+            providerOptions: {
+              google: {
+                taskType: "RETRIEVAL_DOCUMENT",
+                outputDimensionality: env.EMBEDDING_DIMENSIONS,
+              },
+            },
+          }),
+        {
+          retries: 5,
+          baseDelayMs: 2_000,
+          maxDelayMs: 60_000,
+          onRetry: (error, attempt, delayMs) => {
+            logger.warn("Retrying embedding batch after error", {
+              attempt,
+              delayMs,
+              error: error instanceof Error ? error.message : String(error),
+            });
           },
         },
-      });
+      );
 
       if (embeddings.length !== texts.length) {
         logger.warn("Embedding count mismatch", {

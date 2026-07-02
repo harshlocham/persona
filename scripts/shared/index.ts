@@ -51,7 +51,14 @@ export {
   type PipelineEnv,
 } from "./env.js";
 export { loadEnvFiles } from "./load-env.js";
-export { createRateLimiter, sleep, type RateLimiter, type RateLimiterOptions } from "./rate-limit.js";
+export {
+  createRateLimiter,
+  sleep,
+  withRetry,
+  type RateLimiter,
+  type RateLimiterOptions,
+  type RetryOptions,
+} from "./rate-limit.js";
 export {
   PIPELINE_COMMANDS,
   PIPELINE_PERSONA_IDS,

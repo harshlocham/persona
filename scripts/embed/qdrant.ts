@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 
 import { QdrantClient } from "@qdrant/js-client-rest";
 
-import { getEmbeddingEnv, logger } from "../shared/index.js";
+import { getEmbeddingEnv, logger, withRetry } from "../shared/index.js";
 
 /** Distance metric used for the knowledge collection. */
 const DISTANCE_METRIC = "Cosine" as const;
@@ -99,6 +99,41 @@ export async function ensureCollection(
 }
 
 /**
+ * Ensures keyword payload indexes exist for the given fields. Qdrant Cloud
+ * requires an index on any field used in a filter, and the runtime retrieval
+ * service filters on `persona` (and `type` for resources); without these
+ * indexes those searches error out and silently return no results. Creating an
+ * index that already exists is a no-op that we swallow.
+ *
+ * @param context - Qdrant connection bundle
+ * @param fields - Payload field names to index as keywords
+ */
+export async function ensurePayloadIndexes(
+  context: QdrantContext,
+  fields: readonly string[],
+): Promise<void> {
+  const { client, collection } = context;
+
+  for (const field of fields) {
+    try {
+      await client.createPayloadIndex(collection, {
+        field_name: field,
+        field_schema: "keyword",
+        wait: true,
+      });
+
+      logger.info("Ensured Qdrant payload index", { collection, field });
+    } catch (error) {
+      logger.warn("Payload index create skipped (may already exist)", {
+        collection,
+        field,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+}
+
+/**
  * Returns the subset of point IDs that already exist in the collection.
  *
  * @param context - Qdrant connection bundle
@@ -139,12 +174,28 @@ export async function upsertPoints(
 
   const { client, collection } = context;
 
-  await client.upsert(collection, {
-    wait: true,
-    points: points.map((point) => ({
-      id: point.id,
-      vector: point.vector,
-      payload: point.payload,
-    })),
-  });
+  await withRetry(
+    () =>
+      client.upsert(collection, {
+        wait: true,
+        points: points.map((point) => ({
+          id: point.id,
+          vector: point.vector,
+          payload: point.payload,
+        })),
+      }),
+    {
+      retries: 4,
+      baseDelayMs: 1_000,
+      maxDelayMs: 20_000,
+      onRetry: (error, attempt, delayMs) => {
+        logger.warn("Retrying Qdrant upsert after error", {
+          collection,
+          attempt,
+          delayMs,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      },
+    },
+  );
 }
