@@ -39,6 +39,15 @@ yarn-error.log*
 # vercel
 .vercel
 
-# typescript
+# persona knowledge pipeline artifacts
+storage/raw/**/*
+!storage/raw/.gitkeep
+storage/processed/**/*
+!storage/processed/.gitkeep
+storage/knowledge/**/*
+!storage/knowledge/.gitkeep
+storage/embeddings/**/*
+!storage/embeddings/.gitkeep
+
 *.tsbuildinfo
 next-env.d.ts

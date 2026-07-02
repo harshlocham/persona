@@ -32,7 +32,7 @@ export class ChatCompletionService implements ChatCompletionPort {
    * const service = new ChatCompletionService();
    *
    * const { textStream } = service.streamChat({
-   *   systemPrompt: persona.systemPrompt,
+   *   systemPrompt: built from persona.promptProfile via PromptBuilder,
    *   messages: [{ role: "user", content: "Explain clean architecture." }],
    * });
    *

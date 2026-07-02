@@ -43,11 +43,22 @@ function formatRetrievedContextItem(item: RetrievedContextItem): string {
   return item.content.trim();
 }
 
+function buildPersonaPromptSections(persona: Persona): string[] {
+  const sections = [
+    persona.promptProfile.roleStatement.trim(),
+    ...persona.promptProfile.sections.map(
+      (section) => `## ${section.title}\n${section.content.trim()}`,
+    ),
+  ];
+
+  return sections.filter((section) => section.length > 0);
+}
+
 /**
  * Default {@link PromptBuilder} implementation.
  *
- * Concatenates persona instructions with optional conversation summary
- * and retrieved context blocks.
+ * Assembles structured persona metadata into a system prompt, then appends
+ * optional conversation summary and retrieved context blocks.
  */
 export class DefaultPromptBuilder implements PromptBuilder {
   build({
@@ -56,7 +67,7 @@ export class DefaultPromptBuilder implements PromptBuilder {
     retrievedContext = [],
     conversationSummary = "",
   }: PromptBuilderInput): string {
-    const sections: string[] = [persona.systemPrompt.trim()];
+    const sections = buildPersonaPromptSections(persona);
 
     const summary = conversationSummary.trim();
     if (summary) {

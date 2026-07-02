@@ -6,9 +6,11 @@ import { Composer } from "@/presentation/components/chat/composer";
 import { Header } from "@/presentation/components/chat/header";
 import { MessageList } from "@/presentation/components/chat/message-list";
 import { usePersonaChat } from "@/presentation/hooks/use-persona-chat";
+import { getPersonaThemeStyle } from "@/presentation/lib/persona-theme";
 import {
   DEFAULT_PERSONA_ID,
-  PERSONA_OPTIONS,
+  PERSONA_UI_OPTIONS,
+  getPersonaUiOptionById,
 } from "@/shared/constants/personas";
 import type { PersonaId } from "@/domain/models/persona";
 
@@ -18,8 +20,7 @@ export function ChatLayout() {
     usePersonaChat(personaId);
 
   const selectedPersona =
-    PERSONA_OPTIONS.find((persona) => persona.id === personaId) ??
-    PERSONA_OPTIONS[0];
+    getPersonaUiOptionById(personaId) ?? PERSONA_UI_OPTIONS[0];
   const isBusy = status === "submitted" || status === "streaming";
 
   async function handleSend(text: string) {
@@ -35,9 +36,12 @@ export function ChatLayout() {
   }
 
   return (
-    <div className="flex h-dvh flex-col bg-background">
+    <div
+      className="flex h-dvh flex-col bg-background"
+      style={getPersonaThemeStyle(selectedPersona.metadata.accent)}
+    >
       <Header
-        personas={PERSONA_OPTIONS}
+        personas={PERSONA_UI_OPTIONS}
         personaId={personaId}
         onPersonaChange={handlePersonaChange}
         isBusy={isBusy}
@@ -46,7 +50,8 @@ export function ChatLayout() {
       <MessageList
         messages={messages}
         status={status}
-        personaName={selectedPersona.name}
+        persona={selectedPersona}
+        onSuggestedQuestion={handleSend}
       />
 
       {error ? (

@@ -1,9 +1,12 @@
 export {
   DEFAULT_PERSONA_ID,
-  PERSONA_OPTIONS,
-  SUPPORTED_PERSONAS,
-  getPersonaById,
+  PERSONA_IDS,
+  PERSONA_UI_OPTIONS,
+  getPersonaUiOptionById,
   isSupportedPersonaId,
-  type PersonaOption,
   type SupportedPersonaId,
-} from "@/shared/constants/personas";
+} from "@/data/personas";
+
+export type { PersonaUiOption as PersonaOption } from "@/domain/models/persona";
+
+export { PERSONA_UI_OPTIONS as PERSONA_OPTIONS } from "@/data/personas";

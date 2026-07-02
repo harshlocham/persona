@@ -5,3 +5,4 @@ export { MarkdownContent } from "@/presentation/components/chat/markdown-content
 export { MessageBubble } from "@/presentation/components/chat/message-bubble";
 export { MessageList } from "@/presentation/components/chat/message-list";
 export { PersonaSwitcher } from "@/presentation/components/chat/persona-switcher";
+export { SuggestedQuestions } from "@/presentation/components/chat/suggested-questions";

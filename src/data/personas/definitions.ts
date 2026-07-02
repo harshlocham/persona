@@ -1,0 +1,97 @@
+import type { PersonaUiOption } from "@/domain/models/persona";
+import { toPersonaId } from "@/domain/models/persona";
+
+export const PERSONA_IDS = {
+  HITESH: toPersonaId("hitesh"),
+  PIYUSH: toPersonaId("piyush"),
+} as const;
+
+export interface PersonaDefinitionBase extends PersonaUiOption {
+  readonly roleStatement: string;
+}
+
+const HITESH_DEFINITION: PersonaDefinitionBase = {
+  id: PERSONA_IDS.HITESH,
+  name: "Hitesh Choudhary",
+  description:
+    "Programming educator and Chai aur Code co-founder — practical, project-first teaching for aspiring developers.",
+  tags: ["web development", "projects", "career"],
+  metadata: {
+    slug: "hitesh",
+    displayTitle: "Programming Educator · Chai aur Code",
+    suggestedQuestions: [
+      "How should I start learning web development from scratch?",
+      "Explain React hooks the way you teach in your courses.",
+      "What projects should I build to become job-ready?",
+    ],
+    avatar: {
+      initials: "HC",
+    },
+    accent: {
+      primary: "oklch(0.68 0.17 55)",
+      primaryForeground: "oklch(0.98 0.01 95)",
+      bubble: "oklch(0.97 0.03 85)",
+      bubbleForeground: "oklch(0.28 0.03 55)",
+      muted: "oklch(0.94 0.04 80)",
+    },
+  },
+  roleStatement: `You are Hitesh Choudhary, a programming educator and co-founder of Chai aur Code.
+Respond as Hitesh would in a live mentoring session: warm, practical, motivating, and focused on helping learners build real skills through projects.`,
+};
+
+const PIYUSH_DEFINITION: PersonaDefinitionBase = {
+  id: PERSONA_IDS.PIYUSH,
+  name: "Piyush Garg",
+  description:
+    "Software engineering educator and Chai aur Code co-founder — backend, system design, and interview-ready depth.",
+  tags: ["system design", "backend", "interviews"],
+  metadata: {
+    slug: "piyush",
+    displayTitle: "Software Engineering Educator · Chai aur Code",
+    suggestedQuestions: [
+      "Walk me through designing a URL shortener step by step.",
+      "How should I approach system design interview questions?",
+      "Explain microservices vs monolith with real trade-offs.",
+    ],
+    avatar: {
+      initials: "PG",
+    },
+    accent: {
+      primary: "oklch(0.58 0.16 255)",
+      primaryForeground: "oklch(0.98 0.01 255)",
+      bubble: "oklch(0.96 0.02 255)",
+      bubbleForeground: "oklch(0.25 0.04 255)",
+      muted: "oklch(0.93 0.03 255)",
+    },
+  },
+  roleStatement: `You are Piyush Garg, a software engineering educator and co-founder of Chai aur Code.
+Respond as Piyush would: structured, precise, trade-off aware, and focused on scalable thinking, backend fundamentals, and interview-grade reasoning.`,
+};
+
+export const PERSONA_DEFINITIONS: readonly PersonaDefinitionBase[] = [
+  HITESH_DEFINITION,
+  PIYUSH_DEFINITION,
+];
+
+export const DEFAULT_PERSONA_ID = PERSONA_IDS.HITESH;
+
+export const PERSONA_UI_OPTIONS: readonly PersonaUiOption[] =
+  PERSONA_DEFINITIONS.map(({ roleStatement: _roleStatement, ...uiOption }) => uiOption);
+
+export type SupportedPersonaId = (typeof PERSONA_DEFINITIONS)[number]["id"];
+
+export function getPersonaDefinitionById(
+  id: PersonaUiOption["id"],
+): PersonaDefinitionBase | undefined {
+  return PERSONA_DEFINITIONS.find((persona) => persona.id === id);
+}
+
+export function getPersonaUiOptionById(
+  id: PersonaUiOption["id"],
+): PersonaUiOption | undefined {
+  return PERSONA_UI_OPTIONS.find((persona) => persona.id === id);
+}
+
+export function isSupportedPersonaId(id: string): id is SupportedPersonaId {
+  return PERSONA_DEFINITIONS.some((persona) => persona.id === id);
+}

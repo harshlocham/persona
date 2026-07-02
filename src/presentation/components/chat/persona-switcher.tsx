@@ -8,11 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { PersonaOption } from "@/shared/constants/personas";
+import type { PersonaUiOption } from "@/domain/models/persona";
 import type { PersonaId } from "@/domain/models/persona";
 
 interface PersonaSwitcherProps {
-  personas: readonly PersonaOption[];
+  personas: readonly PersonaUiOption[];
   value: PersonaId;
   onChange: (personaId: PersonaId) => void;
   disabled?: boolean;
@@ -33,13 +33,24 @@ export function PersonaSwitcher({
         onValueChange={(nextValue) => onChange(nextValue as PersonaId)}
         disabled={disabled}
       >
-        <SelectTrigger className="w-full sm:w-[220px]">
+        <SelectTrigger className="w-full sm:w-[260px]">
           <SelectValue placeholder="Select persona" />
         </SelectTrigger>
         <SelectContent>
           {personas.map((persona) => (
             <SelectItem key={persona.id} value={persona.id}>
-              {persona.name}
+              <span className="flex items-center gap-2">
+                <span
+                  className="inline-flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-semibold"
+                  style={{
+                    backgroundColor: persona.metadata.accent.muted,
+                    color: persona.metadata.accent.primary,
+                  }}
+                >
+                  {persona.metadata.avatar.initials}
+                </span>
+                {persona.name}
+              </span>
             </SelectItem>
           ))}
         </SelectContent>
@@ -48,7 +59,7 @@ export function PersonaSwitcher({
       {selected ? (
         <div className="hidden min-w-0 flex-1 items-center gap-2 md:flex">
           <p className="truncate text-sm text-muted-foreground">
-            {selected.description}
+            {selected.metadata.displayTitle}
           </p>
           {selected.tags.slice(0, 2).map((tag) => (
             <Badge key={tag} variant="outline" className="shrink-0">
