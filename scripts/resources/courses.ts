@@ -85,13 +85,40 @@ const HITESH_COURSES: readonly CuratedCourse[] = [
       "Data structures and algorithms preparation focused on cracking technical interviews.",
   },
   {
-    slug: "chaicode",
-    title: "Chai aur Code — Cohort courses",
-    url: "https://chaicode.com",
-    topics: ["frontend", "backend", "devops", "ai"],
+    slug: "cohort-gen-ai",
+    title: "GenAI cohort (Chai aur Code)",
+    url: "https://chaicode.com/cohorts/gen-ai",
+    topics: ["ai", "python", "javascript"],
     difficulty: "intermediate",
     summary:
-      "Live cohort-based courses on web development, DevOps, and GenAI on the Chai aur Code platform.",
+      "Live GenAI cohort on Chai aur Code — build generative and agentic AI apps hands-on (GenAI with JS and with Python). Structured so you don't need to buy premium OpenAI keys; Gemini and other providers are integrated too.",
+  },
+  {
+    slug: "cohort-web-dev",
+    title: "Web Development cohort (Chai aur Code)",
+    url: "https://chaicode.com/cohorts/web-dev",
+    topics: ["frontend", "backend", "javascript", "react"],
+    difficulty: "beginner",
+    summary:
+      "Live full-stack web development cohort on Chai aur Code — frontend, backend, and databases with real projects and mentorship.",
+  },
+  {
+    slug: "cohort-mobile-dev",
+    title: "Mobile Development cohort (Chai aur Code)",
+    url: "https://chaicode.com/cohorts/mobile-dev",
+    topics: ["mobile", "frontend", "javascript", "react"],
+    difficulty: "intermediate",
+    summary:
+      "Live mobile app development cohort on Chai aur Code — build and ship cross-platform mobile apps with hands-on projects.",
+  },
+  {
+    slug: "cohort-system-design",
+    title: "System Design cohort (Chai aur Code)",
+    url: "https://chaicode.com/cohorts/system-design",
+    topics: ["system-design", "backend", "career"],
+    difficulty: "advanced",
+    summary:
+      "Live system design cohort on Chai aur Code — scalability, trade-offs, and real-world architecture for interviews and production systems.",
   },
 ];
 

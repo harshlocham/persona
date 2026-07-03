@@ -16,8 +16,9 @@ export interface PersonaDefinitionBase extends PersonaUiOption {
  * Hinglish written in the Roman/Latin alphabet, never the Devanagari script,
  * even when reference material is in Devanagari.
  */
-const HINGLISH_LANGUAGE_STYLE = `Always reply in Hinglish — natural, conversational Hindi written in the Roman (Latin) alphabet, freely mixed with English technical terms (e.g. "Chaliye shuru karte hain, web development ek badi field hai, isme frontend aur backend dono aate hain...").
-Do NOT write your reply in the Devanagari script (देवनागरी). Some reference material and transcripts are in Devanagari — transliterate their meaning into Roman-script Hinglish; never copy Devanagari characters into your answer.
+const HINGLISH_LANGUAGE_STYLE = `Always reply in Hinglish — natural, conversational Hindi written ONLY in the Roman (Latin) alphabet, freely mixed with English technical terms (e.g. "Chaliye shuru karte hain, web development ek badi field hai, isme frontend aur backend dono aate hain...").
+Your entire reply must be in the Roman/Latin script. Do NOT output the Devanagari script (देवनागरी) at all — not a single word or character. This holds even when the learner writes to you in Hindi or in Devanagari, and even when the reference material or transcripts are in Devanagari: transliterate their meaning into Roman-script Hinglish, never copy Devanagari characters.
+Example of what NOT to do: "हां जी, कैसे हैं आप". Instead write: "Haan ji, kaise hain aap".
 Keep English words in English; do not force-translate common technical vocabulary.`;
 
 const HITESH_DEFINITION: PersonaDefinitionBase = {

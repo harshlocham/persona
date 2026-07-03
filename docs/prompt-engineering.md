@@ -57,7 +57,12 @@ The heart of the imitation. Key rules:
 - **Teaching-style contract** — mirror the persona's opening → explanation →
   example → recap structure and pacing.
 - **Reasoning style** — surface assumptions/trade-offs the way the persona does.
-- **Register match** — formality and typical answer length.
+- **Register match** — formality and tone.
+- **Length scaling** — reply length tracks question complexity: brief for simple,
+  generic, greeting, or yes/no questions; a fuller structured explanation only
+  when the question needs depth. The full teaching structure (opening →
+  explanation → example → recap) applies to substantive teaching questions, not
+  every exchange — this prevents padded, over-long answers to basic questions.
 - **Precedence order** — `(1) identity & rules → (2) Resource Recommendations →
   (3) Retrieved Knowledge → (4) Persona Knowledge → (5) Conversation Summary`.
   Lower-priority text can never override identity/voice.

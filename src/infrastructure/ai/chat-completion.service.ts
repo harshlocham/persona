@@ -7,6 +7,7 @@ import {
   createGeminiClient,
   type GeminiClient,
 } from "@/infrastructure/ai/gemini.client";
+import { createDevanagariGuard } from "@/infrastructure/ai/transliteration";
 import { validateStreamChatParams } from "@/infrastructure/ai/validation";
 
 /**
@@ -53,7 +54,7 @@ export class ChatCompletionService implements ChatCompletionPort {
     });
 
     return {
-      textStream: result.textStream,
+      textStream: result.textStream.pipeThrough(createDevanagariGuard()),
     };
   }
 }
