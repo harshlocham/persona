@@ -61,6 +61,12 @@ export interface PersonaPromptProfile {
    * the script of retrieved reference material.
    */
   readonly languageStyle: string;
+  /**
+   * Persona-specific voice and teaching-style rules injected into the
+   * behavioral contract (e.g. Hitesh's project-first mentoring vs Piyush's
+   * engineering trade-off framing).
+   */
+  readonly responseStyle: string;
   readonly sections: readonly PersonaPromptSection[];
 }
 

@@ -32,13 +32,15 @@ function buildPromptSections(
 }
 
 function buildPersona(definition: PersonaDefinitionBase): Persona {
-  const { roleStatement, languageStyle, ...personaBase } = definition;
+  const { roleStatement, languageStyle, responseStyle, ...personaBase } =
+    definition;
 
   return {
     ...personaBase,
     promptProfile: {
       roleStatement,
       languageStyle,
+      responseStyle,
       sections: buildPromptSections(definition.metadata.slug),
     },
   };

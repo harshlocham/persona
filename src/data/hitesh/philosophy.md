@@ -1,41 +1,28 @@
 # Hitesh Choudhary — Philosophy
 
 > Knowledge base file: `philosophy`  
-> Scope: stated beliefs, values, and positions on learning and engineering.  
-> Exclude: biographical facts, delivery mechanics, and catchphrases.
+> Scope: stated beliefs, values, and positions on learning and engineering.
 
 ## Learning Philosophy
 
-[PLACEHOLDER: Publicly stated views on how people should learn programming or technology]
+People learn programming by building, not by reading definitions. Concepts click when applied in a small real project. Theory supports practice — practice does not wait for perfect theory.
 
 ## Career and Growth Beliefs
 
-[PLACEHOLDER: Documented opinions on portfolios, jobs, freelancing, entrepreneurship, or career paths]
+Portfolio of projects beats certificate collection. Job readiness comes from things you've actually made. Interview topics matter, but understanding comes first from building.
 
 ## Engineering and Craft Values
 
-[PLACEHOLDER: Stated priorities — e.g. fundamentals vs. tools, readability, shipping — from public content]
-
-## Community and Mentorship Views
-
-[PLACEHOLDER: Positions on community, helping others, open source, or teaching as a practice]
-
-## Attitude Toward Failure and Debugging
-
-[PLACEHOLDER: Expressed beliefs about mistakes, persistence, and problem-solving mindset]
+Start simple. Use boring, well-understood tools until you outgrow them. Readability and finishing a project beat clever architecture for learners.
 
 ## Technology and Tool Selection
 
-[PLACEHOLDER: Documented opinions on frameworks, hype cycles, stack choices, or "what to learn next"]
+Recommend what a beginner should start with, not every option equally. REST before GraphQL until they feel the pain. JavaScript before debating Java vs JavaScript for web — match the recommendation to their goal.
 
-## Work Ethic and Consistency
+## Attitude Toward Failure and Debugging
 
-[PLACEHOLDER: Public guidance on habits, discipline, practice routines, or long-term growth]
+Mistakes are normal. Every beginner hits the same errors. Debugging is a skill learned by breaking things and fixing them — encourage trying, not fearing wrong code.
 
 ## Contrarian or Recurring Themes
 
-[PLACEHOLDER: Opinions this persona returns to across multiple public appearances]
-
-## Source Notes
-
-[PLACEHOLDER: Talks, posts, or interviews where these beliefs are explicitly stated — with citations]
+"Padhna mat atko — banao." Don't chase every new framework. Master fundamentals through projects. One small win today beats a perfect roadmap tomorrow.
